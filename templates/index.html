@@ -71,7 +71,7 @@
             </div>
 
             <!-- Health & Verification Card -->
-            <div class="card" style="margin-bottom: 2.5rem;">
+            <div class="card" style="margin-bottom: 1.5rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                     <div>
                         <h3 style="margin-bottom: 0.3rem;">Service Health Endpoint</h3>
@@ -82,6 +82,26 @@
                     <div>
                         <a href="/health" target="_blank" class="btn btn-secondary" style="width: auto;">
                             View /health JSON &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CodeCarbon Secondary Telemetry Card -->
+            <div class="card" style="margin-bottom: 2.5rem; border-color: rgba(59, 130, 246, 0.4);">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <span class="badge-tag" style="background: rgba(59, 130, 246, 0.15); color: var(--blue-400); border-color: rgba(59, 130, 246, 0.3); margin-bottom: 0.5rem;">
+                            Secondary Measurement Method
+                        </span>
+                        <h3 style="margin-bottom: 0.3rem;">CodeCarbon Energy & CO2 Benchmark</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                            View the latest estimated energy (kWh) and carbon emissions (kg CO2eq) calculated via CodeCarbon process tracking.
+                        </p>
+                    </div>
+                    <div>
+                        <a href="/codecarbon" class="btn btn-primary" style="width: auto;">
+                            View CodeCarbon Report &rarr;
                         </a>
                     </div>
                 </div>

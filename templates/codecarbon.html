@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeCarbon Measurement Report - Green Metrics Demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="hero">
+            <div class="badge-tag">Secondary Telemetry &bull; CodeCarbon</div>
+            <h1 class="main-title">CodeCarbon Energy & Carbon Report</h1>
+            <p class="subtitle">
+                Software-level energy and CO2-equivalent emission estimates measured locally via 
+                CodeCarbon process tracking mode.
+            </p>
+        </header>
+
+        <main>
+            {% if not data %}
+            <!-- Not Executed State -->
+            <div class="card" style="text-align: center; padding: 3rem 1.5rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+                <h3 style="margin-bottom: 0.5rem;">No Benchmark Results Found</h3>
+                <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 1.5rem auto;">
+                    The benchmark has not been executed yet. Run the benchmark and report scripts in your terminal to collect real measurements:
+                </p>
+                <div class="terminal-box" style="text-align: left; max-width: 500px; margin: 0 auto 1.5rem auto;">
+python codecarbon_benchmark.py
+python codecarbon_report.py
+                </div>
+                <a href="/" class="btn btn-secondary" style="display: inline-block; width: auto;">
+                    &larr; Back to Dashboard
+                </a>
+            </div>
+            {% else %}
+
+            <!-- Comparison Highlight Banner -->
+            <div class="card" style="margin-bottom: 2rem; border-color: rgba(59, 130, 246, 0.4);">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <span class="badge-tag" style="background: rgba(59, 130, 246, 0.15); color: var(--blue-400); border-color: rgba(59, 130, 246, 0.3);">
+                            Benchmark Comparison Summary
+                        </span>
+                        <h2 style="font-size: 1.6rem; margin-top: 0.3rem;">Heavy vs Lightweight Workload</h2>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                            Timestamp: <code>{{ data.timestamp }}</code> &bull; Mode: <code>{{ data.tracking_mode }}</code>
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 1.5rem; text-align: center;">
+                        <div class="stat-box" style="padding: 0.75rem 1.25rem;">
+                            <div class="stat-label">Energy Ratio</div>
+                            <div class="stat-value amber" style="font-size: 1.6rem;">
+                                {% if data.comparison.energy_ratio %}{{ data.comparison.energy_ratio }}x{% else %}N/A{% endif %}
+                            </div>
+                        </div>
+                        <div class="stat-box" style="padding: 0.75rem 1.25rem;">
+                            <div class="stat-label">CO2 Ratio</div>
+                            <div class="stat-value amber" style="font-size: 1.6rem;">
+                                {% if data.comparison.emissions_ratio %}{{ data.comparison.emissions_ratio }}x{% else %}N/A{% endif %}
+                            </div>
+                        </div>
+                        <div class="stat-box" style="padding: 0.75rem 1.25rem;">
+                            <div class="stat-label">Runtime Ratio</div>
+                            <div class="stat-value" style="font-size: 1.6rem;">
+                                {% if data.comparison.duration_ratio %}{{ data.comparison.duration_ratio }}x{% else %}N/A{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workloads Side-by-Side -->
+            <div class="grid-2">
+                <!-- Light Workload Card -->
+                <div class="card workload-card">
+                    <div class="workload-header">
+                        <span class="workload-badge badge-light">Lightweight Baseline</span>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">
+                            {{ data.light_workload.repetitions }} rounds
+                        </span>
+                    </div>
+                    <h3 style="margin-top: 0.5rem;">Lightweight Workload</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        {{ "{:,}".format(data.light_workload.iterations) }} total iterations 
+                        ({{ "{:,}".format(data.light_workload.base_iterations) }} / round).
+                    </p>
+
+                    <div class="stat-grid" style="grid-template-columns: 1fr; gap: 0.75rem;">
+                        <div class="stat-box">
+                            <div class="stat-label">Measured Duration</div>
+                            <div class="stat-value" style="font-size: 1.4rem;">
+                                {{ data.light_workload.duration_seconds }} <span style="font-size: 0.9rem; color: var(--text-muted);">s</span>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Energy Consumed</div>
+                            <div class="stat-value" style="font-size: 1.4rem;">
+                                {{ "%.8f"|format(data.light_workload.energy_kwh) }} <span style="font-size: 0.9rem; color: var(--text-muted);">kWh</span>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                                ({{ "%.3e"|format(data.light_workload.energy_kwh) }} kWh)
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Carbon Emissions</div>
+                            <div class="stat-value" style="font-size: 1.4rem;">
+                                {{ "%.8f"|format(data.light_workload.emissions_kg_co2eq) }} <span style="font-size: 0.9rem; color: var(--text-muted);">kg CO2eq</span>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                                ({{ "%.3e"|format(data.light_workload.emissions_kg_co2eq) }} kg)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Heavy Workload Card -->
+                <div class="card workload-card">
+                    <div class="workload-header">
+                        <span class="workload-badge badge-heavy">CPU Stress Workload</span>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">
+                            {{ data.heavy_workload.repetitions }} rounds
+                        </span>
+                    </div>
+                    <h3 style="margin-top: 0.5rem;">CPU Intensive Workload</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        {{ "{:,}".format(data.heavy_workload.iterations) }} total iterations 
+                        ({{ "{:,}".format(data.heavy_workload.base_iterations) }} / round).
+                    </p>
+
+                    <div class="stat-grid" style="grid-template-columns: 1fr; gap: 0.75rem;">
+                        <div class="stat-box">
+                            <div class="stat-label">Measured Duration</div>
+                            <div class="stat-value amber" style="font-size: 1.4rem;">
+                                {{ data.heavy_workload.duration_seconds }} <span style="font-size: 0.9rem; color: var(--text-muted);">s</span>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Energy Consumed</div>
+                            <div class="stat-value amber" style="font-size: 1.4rem;">
+                                {{ "%.8f"|format(data.heavy_workload.energy_kwh) }} <span style="font-size: 0.9rem; color: var(--text-muted);">kWh</span>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                                ({{ "%.3e"|format(data.heavy_workload.energy_kwh) }} kWh)
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Carbon Emissions</div>
+                            <div class="stat-value amber" style="font-size: 1.4rem;">
+                                {{ "%.8f"|format(data.heavy_workload.emissions_kg_co2eq) }} <span style="font-size: 0.9rem; color: var(--text-muted);">kg CO2eq</span>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                                ({{ "%.3e"|format(data.heavy_workload.emissions_kg_co2eq) }} kg)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Chart Section -->
+            {% if has_chart %}
+            <div class="card" style="margin-top: 2rem;">
+                <h3 style="margin-bottom: 1rem;">Visual Comparison Chart</h3>
+                <div style="text-align: center;">
+                    <img src="/codecarbon/chart" alt="CodeCarbon Comparison Chart" style="max-width: 100%; height: auto; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Scientific / Educational Callout -->
+            <div class="card" style="margin-top: 2rem;">
+                <h4>🔬 Academic Measurement Context: CodeCarbon vs GMT</h4>
+                <p style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.92rem;">
+                    <strong>Important Distinction:</strong> CodeCarbon estimates energy consumption (kWh) and carbon emissions (kg CO2eq) 
+                    using CPU model TDP (Thermal Design Power), process CPU utilization, and regional electricity emission intensity factors. 
+                    In contrast, the <strong>Green Metrics Tool (GMT)</strong> uses hardware-level telemetry (Intel/AMD RAPL energy registers) 
+                    and Linux kernel cgroups within an end-to-end containerized scenario.
+                </p>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;">
+                    <a href="/codecarbon?format=json" target="_blank" class="btn btn-secondary" style="flex: 1;">
+                        View Raw JSON Data &rarr;
+                    </a>
+                    <a href="/" class="btn btn-primary" style="flex: 1;">
+                        &larr; Back to Main Dashboard
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>
+                Green Metrics Classroom Demo &bull; CodeCarbon Secondary Telemetry &bull; 
+                <a href="/">Home</a> &bull; 
+                <a href="https://codecarbon.io/" target="_blank" rel="noopener">codecarbon.io</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

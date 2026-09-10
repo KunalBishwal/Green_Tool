@@ -40,3 +40,7 @@ Thumbs.db
 # GMT temporary artifacts (if run locally)
 gmt-results/
 *.log
+
+# CodeCarbon local cache & config
+.codecarbon/
+.codecarbon.config

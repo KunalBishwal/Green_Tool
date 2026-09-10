@@ -1,0 +1,28 @@
+{
+  "tool": "CodeCarbon",
+  "project": "Green Metrics Classroom Demo",
+  "timestamp": "2026-09-10T20:18:02.069931+00:00",
+  "tracking_mode": "process",
+  "estimation_note": "CodeCarbon estimates energy and CO2-equivalent emissions using CPU model TDP, process CPU utilization, and regional grid carbon intensity factors.",
+  "light_workload": {
+    "iterations": 100000,
+    "base_iterations": 2000,
+    "repetitions": 50,
+    "duration_seconds": 5.8013,
+    "energy_kwh": 1.3061905052335404e-05,
+    "emissions_kg_co2eq": 9.318898602443223e-06
+  },
+  "heavy_workload": {
+    "iterations": 5000000,
+    "base_iterations": 500000,
+    "repetitions": 10,
+    "duration_seconds": 21.3332,
+    "energy_kwh": 0.00025755041381856486,
+    "emissions_kg_co2eq": 0.0004136441544715502
+  },
+  "comparison": {
+    "energy_ratio": 19.72,
+    "emissions_ratio": 44.39,
+    "duration_ratio": 3.68
+  }
+}

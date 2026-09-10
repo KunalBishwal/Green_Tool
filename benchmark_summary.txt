@@ -1,0 +1,30 @@
+============================================================
+        CODECARBON GREEN SOFTWARE BENCHMARK
+============================================================
+
+Lightweight Workload
+------------------------------------------------------------
+Iterations       : 100,000 (2,000 x 50 rounds)
+Duration         : 5.8013 seconds
+Energy           : 0.00001306 kWh (1.306e-05 kWh)
+CO2 emissions    : 0.00000932 kg CO2eq (9.319e-06 kg CO2eq)
+
+CPU Intensive Workload
+------------------------------------------------------------
+Iterations       : 5,000,000 (500,000 x 10 rounds)
+Duration         : 21.3332 seconds
+Energy           : 0.00025755 kWh (2.576e-04 kWh)
+CO2 emissions    : 0.00041364 kg CO2eq (4.136e-04 kg CO2eq)
+
+Comparison
+------------------------------------------------------------
+Heavy / Light Energy Ratio    : 19.72x
+Heavy / Light CO2 Ratio       : 44.39x
+Heavy / Light Runtime Ratio   : 3.68x
+
+============================================================
+Results saved to:
+- emissions_light.csv
+- emissions_heavy.csv
+- codecarbon_results.json
+============================================================

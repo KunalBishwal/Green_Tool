@@ -14,8 +14,10 @@ Key Objectives:
 import time
 import hashlib
 import math
+import os
+import json
 from datetime import datetime, timezone
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file
 
 app = Flask(__name__)
 
@@ -141,6 +143,48 @@ def workload_heavy():
         return jsonify(result)
 
     return render_template("result.html", data=result)
+
+
+@app.route("/codecarbon", methods=["GET"])
+def codecarbon_view():
+    """
+    Displays the latest CodeCarbon benchmark comparison results from codecarbon_results.json.
+    Does not execute the benchmark on request.
+    """
+    results_path = os.path.join(os.path.dirname(__file__), "codecarbon_results.json")
+    chart_path = os.path.join(os.path.dirname(__file__), "codecarbon_comparison.png")
+
+    if not os.path.exists(results_path):
+        not_found_payload = {
+            "status": "not_executed",
+            "message": "No CodeCarbon benchmark results found yet. Run 'python codecarbon_benchmark.py' to generate measurements.",
+            "data": None
+        }
+        if is_json_requested():
+            return jsonify(not_found_payload), 404
+        return render_template("codecarbon.html", data=None, has_chart=False), 200
+
+    try:
+        with open(results_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        if is_json_requested():
+            return jsonify({"status": "error", "message": str(e)}), 500
+        return render_template("codecarbon.html", data=None, error=str(e), has_chart=False), 500
+
+    if is_json_requested():
+        return jsonify(data), 200
+
+    return render_template("codecarbon.html", data=data, has_chart=os.path.exists(chart_path))
+
+
+@app.route("/codecarbon/chart", methods=["GET"])
+def codecarbon_chart():
+    """Serves the generated visual comparison chart image."""
+    chart_path = os.path.join(os.path.dirname(__file__), "codecarbon_comparison.png")
+    if os.path.exists(chart_path):
+        return send_file(chart_path, mimetype="image/png")
+    return jsonify({"error": "Chart not generated yet. Run 'python codecarbon_report.py'."}), 404
 
 
 if __name__ == "__main__":
