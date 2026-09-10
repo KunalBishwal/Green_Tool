@@ -1,0 +1,63 @@
+============================================================
+           GREEN TOOL - CODECARBON BENCHMARK COMMANDS
+============================================================
+
+1. INSTALL DEPENDENCIES
+------------------------------------------------------------
+Ensure Python 3.9+ is installed, then run:
+
+    pip install -r requirements.txt
+
+
+2. RUN CODECARBON BENCHMARK
+------------------------------------------------------------
+Runs process-isolated CodeCarbon energy and CO2 emission tracking 
+for both Lightweight and Heavy CPU workloads:
+
+    python codecarbon_benchmark.py
+
+Output Files Generated:
+- emissions_light.csv
+- emissions_heavy.csv
+- codecarbon_results.json
+- benchmark_summary.txt
+
+
+3. GENERATE VISUAL COMPARISON CHART
+------------------------------------------------------------
+Generates a side-by-side comparison bar chart (codecarbon_comparison.png):
+
+    python codecarbon_report.py
+
+Output File Generated:
+- codecarbon_comparison.png
+
+
+4. RUN THE FLASK APPLICATION
+------------------------------------------------------------
+Start the Flask web server locally:
+
+    python app.py
+
+Server starts at: http://127.0.0.1:5000
+
+
+5. ACCESS WEB DASHBOARDS & ENDPOINTS
+------------------------------------------------------------
+Open your browser or run curl/requests for:
+
+- Main Dashboard             : http://localhost:5000/
+- CodeCarbon Metrics Summary : http://localhost:5000/codecarbon
+- CodeCarbon Visual Chart    : http://localhost:5000/codecarbon/chart
+- Health Check               : http://localhost:5000/health
+- Light Workload Trigger     : http://localhost:5000/workload/light
+- Heavy Workload Trigger     : http://localhost:5000/workload/heavy
+
+
+6. (OPTIONAL) RUN VIA DOCKER COMPOSE
+------------------------------------------------------------
+Build and run the containerized Flask app:
+
+    docker-compose up --build
+
+============================================================
