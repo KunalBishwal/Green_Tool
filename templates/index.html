@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Metrics Classroom Demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Header -->
+        <header class="hero">
+            <div class="badge-tag">Green Software Demonstration</div>
+            <h1 class="main-title">Green Metrics Classroom Demo</h1>
+            <p class="subtitle">
+                An educational software benchmark demonstrating how different computing workloads
+                impact system resources and energy consumption measured by the Green Metrics Tool (GMT).
+            </p>
+        </header>
+
+        <!-- Workloads Interactive Section -->
+        <main>
+            <div class="grid-2">
+                <!-- Lightweight Workload Card -->
+                <div class="card workload-card">
+                    <div>
+                        <div class="workload-header">
+                            <span class="workload-badge badge-light">Low Energy Impact</span>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">~0.01s runtime</span>
+                        </div>
+                        <h3>1. Lightweight Workload</h3>
+                        <p>
+                            Simulates a quick, energy-efficient transaction performing a minimal deterministic hash chain.
+                            Minimal CPU clock state changes or energy spikes.
+                        </p>
+                        <form action="/workload/light" method="GET">
+                            <div class="form-group">
+                                <label for="light_iter">Iterations (Rounds):</label>
+                                <input type="number" id="light_iter" name="iterations" value="{{ default_light }}" min="100" max="{{ max_safe }}" class="input-control">
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                Execute Lightweight Workload &rarr;
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- CPU Intensive Workload Card -->
+                <div class="card workload-card">
+                    <div>
+                        <div class="workload-header">
+                            <span class="workload-badge badge-heavy">High Energy Impact</span>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">~1.0s – 2.0s runtime</span>
+                        </div>
+                        <h3>2. CPU Intensive Workload</h3>
+                        <p>
+                            Simulates a heavy computational job performing hundreds of thousands of SHA-256 cycles and math operations.
+                            Engages higher CPU power states (RAPL energy draw).
+                        </p>
+                        <form action="/workload/heavy" method="GET">
+                            <div class="form-group">
+                                <label for="heavy_iter">Iterations (Rounds):</label>
+                                <input type="number" id="heavy_iter" name="iterations" value="{{ default_heavy }}" min="10000" max="{{ max_safe }}" class="input-control">
+                            </div>
+                            <button type="submit" class="btn btn-warning">
+                                Execute CPU Intensive Workload &rarr;
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health & Verification Card -->
+            <div class="card" style="margin-bottom: 2.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h3 style="margin-bottom: 0.3rem;">Service Health Endpoint</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                            GMT ScenarioRunner and Docker healthchecks ping <code>GET /health</code> to confirm the container is online before initiating benchmarks.
+                        </p>
+                    </div>
+                    <div>
+                        <a href="/health" target="_blank" class="btn btn-secondary" style="width: auto;">
+                            View /health JSON &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Educational Section: How GMT Measures Software -->
+            <section class="info-section">
+                <h2><span>🌱</span> What is Green Software & How GMT Works?</h2>
+                <div class="grid-3">
+                    <div class="card info-card">
+                        <h4>1. Workload Awareness</h4>
+                        <p>
+                            Every line of code and computational loop requires electrical power. By measuring software during idle, light, and heavy phases, we understand its carbon footprint.
+                        </p>
+                    </div>
+                    <div class="card info-card">
+                        <h4>2. Hardware Telemetry</h4>
+                        <p>
+                            The Green Metrics Tool (GMT) uses hardware sensors such as Intel/AMD <strong>RAPL</strong> (Running Average Power Limit) to capture true Joules consumed by CPU and DRAM.
+                        </p>
+                    </div>
+                    <div class="card info-card">
+                        <h4>3. Container Isolation</h4>
+                        <p>
+                            GMT runs our containerized application inside isolated Linux cgroups, accurately attributing CPU core seconds and memory footprints directly to the container.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Classroom Scenario Flow Preview -->
+            <section class="info-section" style="margin-top: 2rem;">
+                <h2><span>⏱️</span> Measurement Flow (usage_scenario.yml)</h2>
+                <div class="card">
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        When submitted to the hosted GMT ScenarioRunner at <strong>https://metrics.green-coding.io/</strong>, the tool executes the automated phases defined in <code>usage_scenario.yml</code>:
+                    </p>
+                    <div class="terminal-box">
+1. Warmup & Health Check  &rarr;  Verifies HTTP 200 on /health
+2. Baseline Idle (5s)     &rarr;  Captures baseline idle power draw
+3. Lightweight Workload   &rarr;  GET /workload/light (low CPU impact)
+4. Cooldown (3s)          &rarr;  System returns toward baseline
+5. CPU Intensive Workload &rarr;  GET /workload/heavy (high CPU impact)
+6. Post-Run Cooldown (3s) &rarr;  Captures post-execution stabilization
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>
+                Green Metrics Classroom Demo &bull; Designed for education and testing with 
+                <a href="https://docs.green-coding.io/" target="_blank" rel="noopener">Green Metrics Tool (GMT)</a> &bull; 
+                <a href="https://metrics.green-coding.io/" target="_blank" rel="noopener">metrics.green-coding.io</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

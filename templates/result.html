@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.workload_type }} - Green Metrics Classroom Demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Result Header -->
+        <header class="result-header">
+            <div class="badge-tag">Execution Result</div>
+            <h1 class="main-title">{{ data.workload_type }}</h1>
+            <p class="subtitle">{{ data.description }}</p>
+        </header>
+
+        <main>
+            <div class="card">
+                <!-- Stat Grid -->
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Execution Duration</div>
+                        <div class="stat-value {% if 'CPU' in data.workload_type %}amber{% endif %}">
+                            {{ data.duration_ms }} <span style="font-size: 1rem; color: var(--text-muted);">ms</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem;">
+                            ({{ data.duration_seconds }} s)
+                        </div>
+                    </div>
+
+                    <div class="stat-box">
+                        <div class="stat-label">Iterations Processed</div>
+                        <div class="stat-value">
+                            {{ "{:,}".format(data.iterations) }}
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem;">
+                            SHA-256 Rounds
+                        </div>
+                    </div>
+
+                    <div class="stat-box">
+                        <div class="stat-label">Arithmetic Checksum</div>
+                        <div class="stat-value" style="font-size: 1.4rem;">
+                            {{ data.checksum }}
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem;">
+                            Floating-Point Verification
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Green Metrics Explanation Callout -->
+                <div class="gmt-callout">
+                    <h4>🔬 Green Metrics Tool (GMT) Observation:</h4>
+                    <p>{{ data.gmt_explanation }}</p>
+                </div>
+
+                <!-- Technical Details Box -->
+                <div style="margin-top: 1.5rem;">
+                    <h4 style="margin-bottom: 0.5rem; font-size: 0.95rem; color: var(--text-secondary);">
+                        Deterministic Output Verification:
+                    </h4>
+                    <div class="terminal-box">
+Hash Preview : {{ data.final_hash_sample }}
+Checksum     : {{ data.checksum }}
+Workload Tag : {{ data.workload_type }}
+Status Code  : HTTP 200 OK
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+                    <a href="/" class="btn btn-secondary" style="flex: 1;">
+                        &larr; Back to Dashboard
+                    </a>
+                    {% if 'Lightweight' in data.workload_type %}
+                    <a href="/workload/heavy" class="btn btn-warning" style="flex: 1;">
+                        Compare with CPU Intensive Workload &rarr;
+                    </a>
+                    {% else %}
+                    <a href="/workload/light" class="btn btn-primary" style="flex: 1;">
+                        Compare with Lightweight Workload &rarr;
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>
+                Green Metrics Classroom Demo &bull; 
+                <a href="/">Home</a> &bull; 
+                <a href="/health" target="_blank">Health Status</a> &bull; 
+                <a href="https://metrics.green-coding.io/" target="_blank" rel="noopener">metrics.green-coding.io</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

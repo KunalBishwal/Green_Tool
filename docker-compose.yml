@@ -1,0 +1,18 @@
+services:
+  classroom-demo-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: green-metrics-classroom-demo:latest
+    container_name: classroom-demo-app
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 2s
+      timeout: 3s
+      retries: 10
+      start_period: 2s
+    restart: unless-stopped

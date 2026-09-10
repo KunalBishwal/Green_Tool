@@ -1,0 +1,85 @@
+---
+name: Green Metrics Classroom Demo
+author: Classroom Instructor
+description: >
+  Classroom benchmark measuring energy consumption and resource utilization differences 
+  between lightweight and CPU-intensive workloads in a Python Flask application.
+
+services:
+  classroom-demo-app:
+    image: green-metrics-classroom-demo:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: classroom-demo-app
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 2s
+      timeout: 3s
+      retries: 10
+      start_period: 2s
+
+flow:
+  - name: 01 - Service Readiness & Health Check
+    container: classroom-demo-app
+    commands:
+      - type: console
+        command: curl -s -f http://localhost:5000/health
+        note: Verifying application startup and health endpoint
+        shell: sh
+        log-stdout: true
+        log-stderr: true
+
+  - name: 02 - Baseline System Idle (5s)
+    container: classroom-demo-app
+    commands:
+      - type: console
+        command: sleep 5
+        note: Measuring baseline idle energy before workload injection
+        shell: sh
+        log-stdout: true
+        log-stderr: true
+
+  - name: 03 - Lightweight Workload Phase
+    container: classroom-demo-app
+    commands:
+      - type: console
+        command: curl -s "http://localhost:5000/workload/light?format=json"
+        note: Executing low-complexity workload (2,000 iterations)
+        shell: sh
+        log-stdout: true
+        log-stderr: true
+
+  - name: 04 - Intermission Cooldown (3s)
+    container: classroom-demo-app
+    commands:
+      - type: console
+        command: sleep 3
+        note: Intermission cooldown to let CPU return to base clock
+        shell: sh
+        log-stdout: true
+        log-stderr: true
+
+  - name: 05 - CPU Intensive Workload Phase
+    container: classroom-demo-app
+    commands:
+      - type: console
+        command: curl -s "http://localhost:5000/workload/heavy?iterations=500000&format=json"
+        note: Executing CPU intensive workload (500,000 iterations)
+        shell: sh
+        log-stdout: true
+        log-stderr: true
+
+  - name: 06 - Post-Workload Cooldown (3s)
+    container: classroom-demo-app
+    commands:
+      - type: console
+        command: sleep 3
+        note: Final cooldown to observe telemetry drop back to idle
+        shell: sh
+        log-stdout: true
+        log-stderr: true
